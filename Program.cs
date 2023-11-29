@@ -321,7 +321,7 @@ do
                 }
 
                 Console.WriteLine($"You have {petWithNoDescription} animals without age information!\n");
-                Console.WriteLine("Would you like to fill out the empty ages?\n (y or n)?");
+                Console.WriteLine("Would you like to fill out the empty ages?\n\t\t\t\t --> (y or n)?");
 
                 do
                 {
@@ -347,32 +347,36 @@ do
                         {
                             if (ourAnimals[i, 0] == animalId)
                             {
-                                Console.WriteLine($"Please Provide the age for the {ourAnimals[i, 1]} with {ourAnimals[i, 0]}!");
-                                readResult = Console.ReadLine();
-                                if (readResult != null)
+                                bool ageGiven = false;
+                                do
                                 {
 
-                                    animalAgeStandIn = readResult;
-                                    isThisANumber = int.TryParse(animalAgeStandIn, out petCurrentAge);
-
-                                    if (isThisANumber)
+                                    Console.WriteLine("\n");
+                                    Console.WriteLine($"Please Provide the age for the {ourAnimals[i, 1]} with {ourAnimals[i, 0]}!\n");
+                                    readResult = Console.ReadLine();
+                                    if (readResult != null)
                                     {
-                                        ourAnimals[i, 2] = "Age: " + animalAgeStandIn;
-                                        Console.WriteLine("Info Added!\n");
-                                        for (int j = 0; j < 6; j++)
+                                        animalAgeStandIn = readResult;
+                                        isThisANumber = int.TryParse(animalAgeStandIn, out petCurrentAge);
+
+                                        if (isThisANumber)
                                         {
-                                            Console.WriteLine(ourAnimals[i, j]);
+                                            ourAnimals[i, 2] = "Age: " + animalAgeStandIn;
+                                            Console.WriteLine("Info Added!\n");
+                                            for (int j = 0; j < 6; j++)
+                                            {
+                                                Console.WriteLine(ourAnimals[i, j]);
+                                            }
+                                            Console.WriteLine("\n");
+                                            ageGiven = true;
                                         }
-                                        Console.WriteLine("\n");
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("We can try that one again next time.");
+                                        else
+                                        {
+                                            Console.WriteLine("We need a number for this please.\n");
+                                        }
                                     }
 
-
-                                    moreInfo = readResult.ToLower();
-                                }
+                                } while (ageGiven == false);
                             }
                         }
                     }
@@ -412,6 +416,7 @@ do
                     if (petWithNoDescription == 1)
                     {
                         Console.WriteLine($"{petWithNoDescription} animal left without a physical description");
+                        Console.WriteLine("\n");
                     }
                     else
                     {
@@ -425,16 +430,16 @@ do
 
                         animalArrayIndex = incompleteInfoIndex[i];
                         Console.WriteLine($"{ourAnimals[animalArrayIndex, 0]} has no description");
-                        Console.WriteLine("Please give some physical details \n");
-
-                        readResult = Console.ReadLine();
+                        Console.WriteLine("\n");
 
                         do
                         {
+                            Console.WriteLine("Please give some physical details \n");
+                            readResult = Console.ReadLine();
+                            Console.WriteLine("\n");
 
                             if (readResult != null && readResult.Length > 0)
                             {
-                                Console.WriteLine(readResult);
                                 ourAnimals[animalArrayIndex, 4] = "Physical description: " + readResult;
                                 Console.WriteLine("Info Added!\n");
                                 for (int j = 0; j < 6; j++)
@@ -473,14 +478,67 @@ do
 
             bool gotAllInfo = false;
 
-
             for (int i = 0; i < maxPets; i++)
             {
                 if (ourAnimals[i, 0] != "ID #: ")
                 {
                     if (ourAnimals[i, 3] == "Nickname: tbd" || ourAnimals[i, 3] == "Nickname: ")
                     {
+                        do
+                        {
+                            Console.WriteLine($"{ourAnimals[i, 0]} has no nickname!");
+                            Console.WriteLine("\n");
+                            Console.WriteLine("Shall we give them one? (y,n)\n");
 
+                            readResult = Console.ReadLine();
+                            Console.WriteLine("\n");
+
+                            if (readResult != null)
+                            {
+
+                                if (readResult == "n")
+                                {
+                                    Console.WriteLine("OK we will get that later");
+                                    gotAllInfo = true;
+                                    continue;
+                                }
+                                else if (readResult == "y")
+                                {
+                                    Console.WriteLine("what name for the little one?\n");
+                                    readResult = Console.ReadLine();
+                                    if (readResult != null && readResult.Length > 0)
+                                    {
+                                        ourAnimals[i, 3] = "Nickname: " + readResult;
+                                        Console.WriteLine("Info Added!\n");
+                                        for (int j = 0; j < 6; j++)
+                                        {
+                                            Console.WriteLine(ourAnimals[i, j]);
+                                        }
+                                        Console.WriteLine("\n");
+                                        gotAllInfo = true;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Let's try that again, enter (y,n)\n");
+                                }
+                            }
+
+                        } while (gotAllInfo == false);
+                    }
+                }
+            }
+
+            Console.WriteLine("Let's Enter any missing personality information.");
+
+            gotAllInfo = false;
+
+            for (int i = 0; i < maxPets; i++)
+            {
+                if (ourAnimals[i, 0] != "ID #: ")
+                {
+                    if (ourAnimals[i, 5] == "Personality: tbd" || ourAnimals[i, 5] == "Personality: ")
+                    {
                         Console.WriteLine($"{ourAnimals[i, 0]} has no nickname!");
                         Console.WriteLine("Shall we give them one? (y,n)");
 
@@ -501,11 +559,11 @@ do
                                 else
                                 {
 
-                                    Console.WriteLine("what name for the little one?\n");
+                                    Console.WriteLine("How would you describe their personality?\n");
                                     readResult = Console.ReadLine();
                                     if (readResult != null && readResult.Length > 0)
                                     {
-                                        ourAnimals[i, 3] = "Nickname: " + readResult;
+                                        ourAnimals[i, 5] = "Personality: " + readResult;
                                         Console.WriteLine("Info Added!\n");
                                         for (int j = 0; j < 6; j++)
                                         {
@@ -522,12 +580,6 @@ do
                 }
             }
 
-
-            // basically copy for animals personality 
-            // need to have confirmation all animals up to date
-            // 
-
-            Console.WriteLine("Challenge Project - please check back soon to see progress.");
             Console.WriteLine("Press the Enter key to continue.");
             readResult = Console.ReadLine();
             break;
